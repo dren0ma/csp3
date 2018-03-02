@@ -19,6 +19,6 @@ class News extends Model
     }
 
     function platforms() {
-    	return $this->belongsToMany('App\Platform');
+    	return $this->belongsTo('App\Platform');
     }
 }

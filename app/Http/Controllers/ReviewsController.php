@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\User;
 use App\Image;
+use App\Platform;
 use App\Review;
 use Validator;
 use Session;
@@ -21,7 +22,8 @@ class ReviewsController extends Controller
     }
 
     public function showAddReviews(){
-        return view('addreviews');
+        $platforms = Platform::all();
+        return view('addreviews', compact('platforms'));
     }
 
     public function add(Request $request){
@@ -29,6 +31,7 @@ class ReviewsController extends Controller
     	        'reviewsTitle' => 'required|max:255',
     	        'reviewsContent' => 'required',
     	        'reviewsImg' => 'required',
+                'reviewsPlatform' => 'required',
     	    ]);
 
 	    if ($validator->fails()) {
@@ -42,6 +45,7 @@ class ReviewsController extends Controller
 	    $new_reviews->title = $request->reviewsTitle;
         $new_reviews->user_id = Auth::user()->id;
         $new_reviews->content = $request->reviewsContent;
+        $new_news->platform = $request->newsPlatform;
 	    $new_reviews->save();
 	    $lastId = $new_reviews->id;
 

@@ -16,12 +16,13 @@ class NewsController extends Controller
     public function index(){
         $news = News::all();
         $latest_news = News::latest()->first();
-        
+
         return view('news', compact('news'));
     }
 
     public function showAddNews(){
-        return view('addnews');
+        $platforms = Platform::all();
+        return view('addnews', compact('platforms'));
     }
 
     public function add(Request $request){
@@ -29,6 +30,7 @@ class NewsController extends Controller
     	        'newsTitle' => 'required|max:255',
     	        'newsContent' => 'required',
     	        'newsImg' => 'required',
+                'newsPlatform' => 'required',
     	    ]);
 
 	    if ($validator->fails()) {
@@ -42,17 +44,9 @@ class NewsController extends Controller
 	    $new_news->title = $request->newsTitle;
         $new_news->user_id = Auth::user()->id;
         $new_news->content = $request->newsContent;
+        $new_news->platform = $request->newsPlatform;
 	    $new_news->save();
 	    $lastId = $new_news->id;
-
-        /* save platforms */
-        $platforms = $request->input('newsPlatform');
-
-        foreach ($platforms as $platform) {
-            $platform = new Platform();
-            $platform->platform
-        }
-
 
         /* save image to storage, db */
         $img = Input::file('newsImg')->hashName();

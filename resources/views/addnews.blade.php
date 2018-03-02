@@ -16,7 +16,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-sm-12">
+		<div class="col-sm-8 col-sm-offset-2">
 			<h2>ADD GAME NEWS</h2>
 			<form action='{{ url("/news/addnews") }}' method="post" enctype="multipart/form-data">
 				<div class="form-group">
@@ -24,19 +24,14 @@
 					<input type="text" class="form-control" name="newsTitle" id="newsTitle"></input>
 				</div>
 				<div class="form-group">
-					<label for="newsPlatform" class="news-label">Platforms:</label>
-					<div class="checkbox">
-						<label><input type="checkbox" value="" name="newsPlatform[]">PC</label>
-					</div>
-					<div class="checkbox">
-						<label><input type="checkbox" value="" name="newsPlatform[]">XBOX ONE</label>
-					</div>
-					<div class="checkbox">
-						<label><input type="checkbox" value="" name="newsPlatform[]">PS4</label>
-					</div>
-					<div class="checkbox">
-						<label><input type="checkbox" value="" name="newsPlatform[]">SWITCH</label>
-					</div>
+					<label for="newsPlatform" class="news-label">Select Platform:</label>
+					<select class="form-control form-sel" id="newsPlatformSel">
+						<option selected disabled>Platforms</option>
+						@foreach ($platforms as $platform)
+						<option value="{{ $platform->id }}" data-id="{{ $platform->id }}">{{ $platform->type }}</option>
+						@endforeach
+					</select>
+					<input type="hidden" name="newsPlatform" id="newsPlatform" value=""></input>
 				</div>
 				<div class="form-group">
 					<label for="newsImg" class="news-label">Upload Image:</label>

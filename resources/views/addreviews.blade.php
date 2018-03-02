@@ -20,16 +20,26 @@
 			<h2>ADD GAME REVIEW</h2>
 			<form action='{{ url("/reviews/addreviews") }}' method="post" enctype="multipart/form-data">
 				<div class="form-group">
-					<label for="news-title" class="news-label">Title:</label>
-					<input type="text" class="form-control" name="newsTitle" id="newsTitle"></input>
+					<label for="reviewstitle" class="reviewslabel">Title:</label>
+					<input type="text" class="form-control" name="reviewsTitle" id="reviewsTitle"></input>
 				</div>
 				<div class="form-group">
-					<label for="img" class="news-label">Upload Image:</label>
-					<input type="file" name="newsImg" id="newsImg" class="form-control">
+					<label for="reviewsPlatform" class="reviewslabel">Select Platform:</label>
+					<select class="form-control form-sel" id="reviewsPlatformSel">
+						<option selected disabled>Platforms</option>
+						@foreach ($platforms as $platform)
+						<option value="{{ $platform->id }}" data-id="{{ $platform->id }}">{{ $platform->type }}</option>
+						@endforeach
+					</select>
+					<input type="hidden" name="reviewsPlatform" id="reviewsPlatform" value=""></input>
 				</div>
 				<div class="form-group">
-					<label for="news-content" class="news-label">Content:</label>
-					<textarea class="form-control" rows="10" name="newsContent" id="newsContent"></textarea>
+					<label for="img" class="reviewslabel">Upload Image:</label>
+					<input type="file" name="reviewsImg" id="reviewsImg" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="reviewscontent" class="reviewslabel">Content:</label>
+					<textarea class="form-control" rows="10" name="reviewsContent" id="reviewsContent"></textarea>
 				</div>
 				<div class="form-group">
 					<input type="submit" value="Submit Post" name="submit">

@@ -241,8 +241,9 @@ h3, h4 {
 /* buttons */
 
 .btn {
-	padding-top: 7px;
-	padding-bottom: 7px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 1.6rem;
 }
 
 .btn-default {
@@ -271,9 +272,9 @@ h3, h4 {
     
 }
 
-.cat-btn {
-	width: 19%;
-}
+/*.cat-btn {
+	width: 1%;
+}*/
 
 .highlight {
 
@@ -313,6 +314,10 @@ input[type=submit] {
 textarea {
 	width: 100%;
 	resize: vertical;
+}
+
+.form-sel {
+	width: 20vw;
 }
 
 /* posts */

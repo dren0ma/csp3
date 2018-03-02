@@ -8,8 +8,8 @@
 	<h2>GAME NEWS</h2>
 	<div class="row">
 		<div class="col-sm-8">
-			<a href="{{ url('/news/'.$news->id.'/editnews') }}" class="btn btn-lg btn-default cat-btn"><span><i class="fas fa-plus"></i></span>EDIT</a>
-			<a href="{{ url('/news/'.$news->id.'/deletenews') }}" class="btn btn-lg btn-default cat-btn"><span><i class="fas fa-plus"></i></span>DELETE</a>
+			<a href="{{ url('/news/'.$news->id.'/editnews') }}" class="btn btn-lg btn-default cat-btn"><span><i class="fas fa-edit"></i></span>EDIT</a>
+			<a href="{{ url('/news/'.$news->id.'/deletenews') }}" class="btn btn-lg btn-default cat-btn pull-right"><span><i class="fas fa-trash-alt"></i></span>DELETE</a>
 			<h3>{{ $news->title }}</h3>
 			@foreach($news->images as $image)
 				<div class="img-size-post">
