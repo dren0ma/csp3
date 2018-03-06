@@ -42,6 +42,10 @@
 					<textarea class="form-control" rows="10" name="newsContent" id="newsContent"></textarea>
 				</div>
 				<div class="form-group">
+					<label for="newsVid" class="news-label">Video Embed Link:</label>
+					<input type="text" class="form-control" name="newsVid" id="newsVid"></input>
+				</div>
+				<div class="form-group">
 					<input type="submit" value="Submit Post" name="submit">
 					<input type="hidden" value="{{ csrf_token() }}" name="_token">
 				</div>

@@ -21,7 +21,7 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
 
     <!--   google fonts    -->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 
 </head>
 <body>

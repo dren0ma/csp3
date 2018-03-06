@@ -5,55 +5,106 @@
 @section('content')
 
 <div class="container">
-	<h2>GAME NEWS</h2>
 	<div class="row">
-		<div class="col-sm-8">
-			<a href="{{ url('/news/'.$news->id.'/editnews') }}" class="btn btn-lg btn-default cat-btn"><span><i class="fas fa-edit"></i></span>EDIT</a>
-			<a href="{{ url('/news/'.$news->id.'/deletenews') }}" class="btn btn-lg btn-default cat-btn pull-right"><span><i class="fas fa-trash-alt"></i></span>DELETE</a>
-			<h3>{{ $news->title }}</h3>
-			@foreach($news->images as $image)
-				<div class="img-size-post">
-					<img class="img-responsive" src="{{ asset($image->filename)  }}" alt="image"></img>
-				</div>
-			@endforeach
-			<h4>{{ $news->title }}</h4>
-			<p><small>By</small>&nbsp;<small class="author">{{ $news->user->name}}</small><small><span><i class="far fa-calendar-alt"></i></span>&nbsp;<span class="post-time">{{ $news->created_at->diffForHumans()}}</span></small></p>
+		<div class="col-md-12">
+			<h2>GAME NEWS</h2>
+			<div class="row">
+				{{-- main content--}}
+				<div class="col-md-8 top-col">
+					<div class="row">
+						{{-- if admin, add addnews button --}}
+						@if (Auth::user()->role == 1)
+						<div class="col-md-6 top-col">
+							<a href="{{ url('/news/'.$news->id.'/editnews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-edit"></i></span>EDIT</a>
+						</div>
+						<div class="col-md-6 top-col">
+							<a href="{{ url('/news/'.$news->id.'/deletenews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-trash"></i></span>DELETE</a>
+						</div>
+						@endif
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<h3>{{ $news->title }}</h3>
+							@foreach($news->images as $image)
+								<div class="img-size-post">
+									<img class="img-responsive" src="{{ asset($image->filename)  }}" alt="image"></img>
+								</div>
+							@endforeach
+							<h5>{{ $news->title }}</h5>
+							<p><small>By </small><small class="author txt-space">{{ $news->user->name}}</small><small><span><i class="far fa-calendar-alt"></i> </span><span class="post-time"> {{ $news->created_at->diffForHumans()}}</span></small></p>
 
-			<p class="post">{!! $news->content !!}</p>
- 		</div>
- 		{{-- sidebar --}}
+							<p class="post">{!! $news->content !!}</p>
 
-		@include('layouts.side')
-	</div>
-</div>
+							<!-- 16:9 aspect ratio -->
+							@if (count($news->videos) > 0)
+								<div class="embed-responsive embed-responsive-16by9">
+								    @foreach($news->videos as $video)
+								    	<iframe class="embed-responsive-item" src="{{ asset($video->link) }}"></iframe>
+									@endforeach
+								</div>
+							@endif
+						</div>
+					</div>
+					<h2><span class="comment-count">{{ count($news->comments) }}</span>COMMENTS</h2>
+					<div class="comments-container">
+						@foreach($news->comments as $comment)
+						<div class="row comment-row" id="{{ $comment->id }}">
+							<div class="col-md-12">
+								<div class="media">
+									<div class="media-left media-top">
+											
+									</div>
+									<div class="media-body">
+										<div class="form-group">		
+											<p>
+												{{ $comment->comment }}
+											</p>
+											<p>
+												<small>
+													by 
+												</small>
+												<small class="post-time txt-space2">
+													{{ $comment->user->name}}
+												</small>
+												<small class="txt-space2">
+													{{ $comment->created_at->diffForHumans()}}
+												</small>
+											@if (Auth::user()->name == $comment->user->name)
+												<input type="button" value="DELETE" name="newsCommentDel" id="newsCommentDel" data-id="{{ $comment->id }}" class="btn btn-default-inv">
+												<input type="hidden" value="{{ csrf_token() }}" name="newsToken" id="newsToken">
+											@endif
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						@endforeach
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							@guest
+							@else
+							<h2>ADD COMMENT</h2>
+							<div class="form-group">
+								<textarea class="form-control text-area" rows="5" name="newsComment" id="newsComment"></textarea>
+							</div>
+							<div class="form-group">
+								<input type="button" value="ADD COMMENT" name="newsCommentsubmit" id="newsCommentsubmit" data-id="{{ $news->id }}" class="btn btn-default-inv">
+								<input type="hidden" value="{{ csrf_token() }}" name="newsToken" id="newsToken">
+							</div>
+							@endguest
+						</div>
+					</div>
+ 				</div> {{-- main content --}}
+				{{-- sidebar --}}
+				@include('layouts.side')
+			</div> {{-- content row --}}
+		</div> {{-- body col --}}
+	</div> {{-- body row --}}
+</div> {{-- container --}}
 
 @endsection
 
 
 
-{{-- <div class="container">
-	<div class="row">
-		<div class="col-sm-8">
-		<h2>ADD GAME NEWS</h2>
-		<h3>DOTA 2 IS MOVING TO A BI-WEEKLY UPDATE SCHEDULE</h3>
-		<div class="img-size-post">
-			<img class="img-responsive" src="{{asset('img/postimg/post-1a2.png')}}" alt="image"></img>
-		</div>
-		<h4>DOTA 2 IS MOVING TO A BI-WEEKLY UPDATE SCHEDULE</h4>
-		<p><small>By </small><small class="author">Couch Gaming</small><small> Date</small></p>
-
-		<p>Nearly five years after the debut of Dota 2, lead developer IceFrog has decided that it's time to try something different. For the next six months, give or take, the huge, sweeping patches that followers are familiar with are out, and smaller, more frequent updates are in. 
-
-		<h2>\\</h2>
-		<p><em>We want to try taking a different approach to how gameplay patches are released. Instead of big patches a couple of times a year, we'll be releasing small patches every 2 weeks on Thursdays. We'll be trying this out for about six months and then reevaluating.</em></p>
-		<p><em>-IceFrog</em></p>
-		
-		<h2 class="h2-alt">//</h2>
-		<p>It's not as though Dota 2 hasn't been updated on an ongoing basis prior to this, but those were generally small spasms of tweaks and tuning. More significant changes would appear in major updates, like the Dueling Fates update that went live last November. IceFrog didn't say what drove the decision to move to a more rapid-fire schedule, but as Dot Esports pointed out, the shift could have a real impact on the Dota 2 pro scene: Teams will have to adjust to changes far more frequently than they did under the old system, possibly including—unless Valve makes allowances for interruptions in the schedule—in the midst of tournaments.
-
-		It's possible that the whole thing will prove to be a bust, and that the old system held up for as long as it did precisely because it worked well and helped drive the excitement that's kept fans invested in Dota 2. Nobody likes to wait, but having a Big Thing to look forward to is arguably more engaging than routine bi-weekly maintenance.
-
-		IceFrog also said that, to help players keep up with the faster-paced schedule, a new feature will be added to the game to notify players of hero changes. As for which Thursday will see this new schedule get underway, has not yet been announced.</p>
- 		</div>
-	</div>
-</div> --}}

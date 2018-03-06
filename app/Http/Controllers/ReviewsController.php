@@ -2,99 +2,141 @@
 
 namespace App\Http\Controllers;
 use App\User;
-use App\Image;
-use App\Platform;
+use App\News;
 use App\Review;
+use App\Image;
+use App\Video;
+use App\Comment;
+use App\Platform;
 use Validator;
 use Session;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
-
 class ReviewsController extends Controller
 {
     public function index(){
-        $reviews = Review::all();
-        $latest_reviews = Review::latest()->first();
-        
-        return view('reviews', compact('reviews'));
+        $reviews = Review::orderBy('created_at', 'desc')->get();
+        $sidenews = News::orderBy('created_at', 'desc')->take(3)->get();
+        $sidereviews = Review::orderBy('created_at', 'desc')->take(3)->get();
+        $latest_video = Video::latest()->first();
+        return view('reviews', compact('reviews', 'sidenews', 'sidereviews', 'latest_video'));
     }
 
-    public function showAddReviews(){
+    public function showAddReview(){
         $platforms = Platform::all();
-        return view('addreviews', compact('platforms'));
+        return view('addreview', compact('platforms'));
     }
 
     public function add(Request $request){
-    	$validator = Validator::make($request->all(), [
-    	        'reviewsTitle' => 'required|max:255',
-    	        'reviewsContent' => 'required',
-    	        'reviewsImg' => 'required',
-                'reviewsPlatform' => 'required',
+        $validator = Validator::make($request->all(), [
+                'reviewTitle' => 'required|max:255',
+    	        'reviewContent' => 'required',
+    	        'reviewImg' => 'required',
+                'reviewPlatform' => 'required',
     	    ]);
 
+
 	    if ($validator->fails()) {
-	        return redirect('/reviews/addreviews')
+	        return redirect('/reviews/addreview')
 	            ->withInput()
 	            ->withErrors($validator);
 	    }
 
         /* create post */
-	    $new_reviews = new Review();
-	    $new_reviews->title = $request->reviewsTitle;
-        $new_reviews->user_id = Auth::user()->id;
-        $new_reviews->content = $request->reviewsContent;
-        $new_news->platform = $request->newsPlatform;
-	    $new_reviews->save();
-	    $lastId = $new_reviews->id;
+	    $new_review = new Review();
+	    $new_review->title = strtoupper($request->reviewTitle);
+        $new_review->user_id = Auth::user()->id;
+        $new_review->content = $request->reviewContent;
+	    $new_review->save();
+	    $lastId = $new_review->id;
+
+        /* save platform */
+        $platformId = $request->reviewPlatform;
+        $new_review->platforms()->sync(array($platformId));
 
         /* save image to storage, db */
-        $img = Input::file('reviewsImg')->hashName();
-        $filename = $request->file('reviewsImg')->store('postimg');
+        $img = Input::file('reviewImg')->hashName();
+        $filename = $request->file('reviewImg')->store('postimg');
         $path = 'img/'.$filename;
 
         $new_img = new Image();
-        $new_img->reviews_id = $lastId;
+        $new_img->review_id = $lastId;
         $new_img->filename = $path;
         $new_img->save();
         
-        // Session::flash('status', 'added');
+        if ($request->reviewVid != NULL){
+        /* save video link */
+            $new_vid = new Video();
+            $new_vid->review_id = $lastId;
+            $new_vid->link = $request->reviewVid;
+            $new_vid->save();
+        }
 
+        // Session::flash('status', 'added');
     	return redirect('/reviews/'.$lastId);
     }
 
-    public function showReviews($id){
-    	$reviews = Reviews::find($id);
-    	return view('reviewsview', compact('reviews'));
+    public function showReview($id){
+    	$review = Review::find($id);
+        $sidenews = News::orderBy('created_at', 'desc')->take(3)->get();
+        $sidereviews = Review::orderBy('created_at', 'desc')->take(3)->get();
+        $latest_video = Video::latest()->first();
+        return view('reviewview', compact('review', 'sidenews', 'sidereviews', 'latest_video'));
     }
 
-    public function showEditReviews($id){
-        $reviews = Reviews::find($id);
-        return view('editreviews', compact('reviews'));
+    public function showEditReview($id){
+        $review = Review::find($id);
+        $platforms = Platform::all();
+        return view('editreview', compact('review', 'platforms'));
     }
 
     public function edit($id, Request $request) {
-        $edit_reviews = Reviews::find($id);
-        $edit_reviews->title = $request->reviewsTitle;
-        $edit_reviews->content = $request->reviewsContent;
-        $edit_reviews->save();
+        $edit_review = Review::find($id);
+        $edit_review->title = $request->reviewTitle;
+        $edit_review->content = $request->reviewContent;
+        $edit_review->save();
 
-        $img = Input::file('reviewsImg')->hashName();
-        $filename = $request->file('reviewsImg')->store('postimg');
-        $path = 'img/'.$filename;
+        /* save platform */
+        $platformId = $request->reviewPlatform;
+        $edit_review->platforms()->sync(array($platformId));
 
-        $edit_img = Image::findOrFail($edit_reviews->id);
-        $edit_img->filename = $path;
-        $edit_img->save();
+        if (Input::hasFile('reviewImg')){
+            $img = Input::file('reviewImg')->hashName();
+            $filename = $request->file('reviewImg')->store('postimg');
+            $path = 'img/'.$filename;
+            $edit_img = Image::where('review_id', $edit_review->id)->first();
+            
+            $edit_img->filename = $path;
+            $edit_img->save();
+        }
+
+        if ($request->reviewVid != NULL){
+            /* check if post already has a video */
+            
+            $edit_vid = Video::where('review_id', $edit_review->id)->first();
+            if (count($edit_vid) > 0) {
+                $edit_vid->link = $request->reviewVid;
+                $edit_vid->review_id = $edit_review->id;
+                $edit_vid->save();
+            }
+            else {
+            $edit_vid = new Video();
+            $edit_vid->link = $request->reviewVid;
+            $edit_vid->review_id = $edit_review->id;
+            $edit_vid->save();
+            }
+        }    
+
         return redirect('/reviews/'.$id);
     }
 
     public function delete($id) {
-        $reviews = Reviews::find($id);
-        Image::findOrFail($reviews->id)->delete();
-        Reviews::findOrFail($id)->delete();
-
+        $review = Review::find($id);
+        Image::where('review_id', $review->id)->delete();
+        Video::where('review_id', $review->id)->delete();
+        Review::findOrFail($id)->delete();
         return redirect('/reviews');
     }
 }

@@ -16,6 +16,8 @@ class CreateCommentsTable extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->integer('news_id')->unsigned()->nullable();
+            $table->integer('review_id')->unsigned()->nullable();
             $table->text('comment');
             $table->timestamps();
         });
@@ -24,7 +26,19 @@ class CreateCommentsTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->foreign('news_id')
+                ->references('id')
+                ->on('news')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->foreign('review_id')
+                ->references('id')
+                ->on('reviews')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
     }

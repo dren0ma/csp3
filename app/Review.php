@@ -18,7 +18,11 @@ class Review extends Model
         return $this->hasMany('App\Image');
     }
 
+    function videos() {
+        return $this->hasMany('App\Video');
+    }
+
     function platforms() {
-    	return $this->belongsTo('App\Platform');
+        return $this->belongsToMany('App\Platform')->withPivot('platform_id');
     }
 }

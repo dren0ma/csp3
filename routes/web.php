@@ -33,20 +33,30 @@ Route::post('/news/{id}/editnews', 'NewsController@edit');
 Route::get('/news/{id}/deletenews', 'NewsController@delete');
 
 // reviews
-Route::get('/reviews/addreviews', 'ReviewsController@showAddReviews');
-Route::post('/reviews/addreviews', 'ReviewsController@add');
+Route::get('/reviews/addreview', 'ReviewsController@showAddReview');
+Route::post('/reviews/addreview', 'ReviewsController@add');
 
-Route::get('/reviews/{id}', 'ReviewsController@showReviews');
+Route::get('/reviews/{id}', 'ReviewsController@showReview');
 
-Route::get('/reviews/{id}/editreviews', 'ReviewsController@showEditReviews');
-Route::post('/reviews/{id}/editreviews', 'ReviewsController@edit');
+Route::get('/reviews/{id}/editreview', 'ReviewsController@showEditReview');
+Route::post('/reviews/{id}/editreview', 'ReviewsController@edit');
 
-Route::get('/reviews/{id}/deletereviews', 'ReviewsController@delete');
+Route::get('/reviews/{id}/deletereview', 'ReviewsController@delete');
 
+//comments
+Route::post('news/{id}/addcomment', 'CommentsController@addNewsComment');
+Route::post('news/{id}/deletecomment', 'CommentsController@deleteNewsComment');
+
+Route::post('reviews/{id}/addcomment', 'CommentsController@addReviewComment');
+Route::post('reviews/{id}/deletecomment', 'CommentsController@deleteReviewComment');
 
 // auth
 Route::get('auth/{provider}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');
+
+// search
+// Route::post('/sortnews/{sort}', 'SearchController@sortNews');
+
 
 
 Auth::routes();
