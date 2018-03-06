@@ -55,7 +55,8 @@ Route::get('auth/{provider}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');
 
 // search
-// Route::post('/sortnews/{sort}', 'SearchController@sortNews');
+Route::post('/sortnews/{sort}', 'SearchController@sortNews');
+Route::get('/news/sort/{sort}', 'SearchController@showSortedNews');
 
 
 
