@@ -13,9 +13,11 @@
 				{{-- main content--}}
 				<div class="col-md-8 top-col">
 					{{-- if admin, add addnews button --}}
-					@if (Auth::user()->role == 1)
-						<a href="{{ url('/news/addnews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-plus"></i></span>ADD NEWS</a>
-					@endif 
+					@if(Auth::user())
+						@if (Auth::user()->role == 1)
+							<a href="{{ url('/news/addnews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-plus"></i></span>ADD NEWS</a>
+						@endif 
+					@endif
 					{{-- button row --}}
 					<div class="row">
 						<div class="col-md-3 top-col">
