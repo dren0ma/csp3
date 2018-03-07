@@ -94,7 +94,7 @@ class ReviewsController extends Controller
 
     public function edit($id, Request $request) {
         $edit_review = Review::find($id);
-        $edit_review->title = $request->reviewTitle;
+        $edit_review->title = strtoupper($request->reviewTitle);
         $edit_review->content = $request->reviewContent;
         $edit_review->save();
 

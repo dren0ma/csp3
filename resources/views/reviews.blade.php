@@ -21,18 +21,19 @@
 					{{-- button row --}}
 					<div class="row">
 						<div class="col-md-3 top-col">
-							<a href="{{ url('/PC/sortreview') }}" class="btn btn-lg btn-default cat-btn">PC</a>
+							<a class="btn btn-lg btn-default cat-btn sortReviews" data-sort="PC">PC</a>
 						</div>
 						<div class="col-md-3 top-col">
-							<a href="{{ url('/XBOX/sortreview') }}" class="btn btn-lg btn-default cat-btn">XBOX</a>
+							<a class="btn btn-lg btn-default cat-btn sortReviews" data-sort="XBOX">XBOX</a>
 						</div>
 						<div class="col-md-3 top-col">
-							<a href="{{ url('/PS4/sortreview') }}" class="btn btn-lg btn-default cat-btn">PS4</a>
+							<a class="btn btn-lg btn-default cat-btn sortReviews" data-sort="PS4">PS4</a>
 						</div>
 						<div class="col-md-3 top-col">
-							<a href="{{ url('/SWITCH/sortreview') }}" class="btn btn-lg btn-default cat-btn">SWITCH</a>
+							<a class="btn btn-lg btn-default cat-btn sortReviews" data-sort="SWITCH">SWITCH</a>
 						</div>
 					</div>
+					<div id="row-add">
 					@foreach($reviews as $review)
 						<div class="row post-row">
 							<div class="col-md-3">
@@ -52,6 +53,7 @@
 							</div>
 						</div>
 					@endforeach
+					</div>
 				</div> {{-- main content --}}
 				{{-- sidebar --}}
 				@include('layouts.side')

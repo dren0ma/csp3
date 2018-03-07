@@ -93,7 +93,7 @@ class NewsController extends Controller
 
     public function edit($id, Request $request) {
         $edit_news = News::find($id);
-        $edit_news->title = $request->newsTitle;
+        $edit_news->title = strtoupper($request->newsTitle);
         $edit_news->content = $request->newsContent;
         $edit_news->save();
 

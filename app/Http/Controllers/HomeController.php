@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\News;
+use App\Review;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $news = News::orderBy('created_at', 'desc')->take(4)->get();
+        $latest_news = News::latest()->first();
+        $reviews = Review::orderBy('created_at', 'desc')->take(4)->get();
+        return view('home', compact('news', 'reviews', 'latest_news'));
+    }
+
+    public function newsClick($id) {
+        $clickednews = News::find($id);
+
+        return view ('clickedhomenews', compact('clickednews'));
     }
 }

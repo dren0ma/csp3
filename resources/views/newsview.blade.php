@@ -13,13 +13,15 @@
 				<div class="col-md-8 top-col">
 					<div class="row">
 						{{-- if admin, add addnews button --}}
-						@if (Auth::user()->role == 1)
-						<div class="col-md-6 top-col">
-							<a href="{{ url('/news/'.$news->id.'/editnews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-edit"></i></span>EDIT</a>
-						</div>
-						<div class="col-md-6 top-col">
-							<a href="{{ url('/news/'.$news->id.'/deletenews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-trash"></i></span>DELETE</a>
-						</div>
+						@if (Auth::user())
+							@if (Auth::user()->role == 1)
+								<div class="col-md-6 top-col">
+									<a href="{{ url('/news/'.$news->id.'/editnews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-edit"></i></span>EDIT</a>
+								</div>
+								<div class="col-md-6 top-col">
+									<a href="{{ url('/news/'.$news->id.'/deletenews') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-trash"></i></span>DELETE</a>
+								</div>
+							@endif
 						@endif
 					</div>
 					<div class="row">
@@ -69,10 +71,12 @@
 												<small class="txt-space2">
 													{{ $comment->created_at->diffForHumans()}}
 												</small>
-											@if (Auth::user()->name == $comment->user->name)
-												<input type="button" value="DELETE" name="newsCommentDel" id="newsCommentDel" data-id="{{ $comment->id }}" class="btn btn-default-inv">
-												<input type="hidden" value="{{ csrf_token() }}" name="newsToken" id="newsToken">
-											@endif
+												@if (Auth::user())
+													@if (Auth::user()->id == $comment->user->id)
+														<input type="button" value="DELETE" name="newsCommentDel" id="newsCommentDel" data-id="{{ $comment->id }}" class="btn btn-default-inv">
+														<input type="hidden" value="{{ csrf_token() }}" name="newsToken" id="newsToken">
+													@endif
+												@endif
 											</p>
 										</div>
 									</div>

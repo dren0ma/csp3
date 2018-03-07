@@ -23,6 +23,10 @@ class News extends Model
     }
 
     function platforms() {
-        return $this->belongsToMany('App\Platform')->withPivot('platform_id');
+        return $this->belongsToMany('App\Platform');
+    }
+
+    function sorted($sort) {
+        return $this->platforms()->withPivot('type', $sort);
     }
 }

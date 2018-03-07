@@ -13,13 +13,15 @@
                 <div class="col-md-8 top-col">
                     <div class="row">
                         {{-- if admin, add addnews button --}}
-                        @if (Auth::user()->role == 1)
-                        <div class="col-md-6 top-col">
-                            <a href="{{ url('/reviews/'.$review->id.'/editreview') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-edit"></i></span>EDIT</a>
-                        </div>
-                        <div class="col-md-6 top-col">
-                            <a href="{{ url('/reviews/'.$review->id.'/deletereview') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-trash"></i></span>DELETE</a>
-                        </div>
+                        @if (Auth::user())
+                            @if (Auth::user()->role == 1)
+                                <div class="col-md-6 top-col">
+                                    <a href="{{ url('/reviews/'.$review->id.'/editreview') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-edit"></i></span>EDIT</a>
+                                </div>
+                                <div class="col-md-6 top-col">
+                                    <a href="{{ url('/reviews/'.$review->id.'/deletereview') }}" class="btn btn-lg btn-default-inv btn-block cat-add-btn"><span><i class="fas fa-trash"></i></span>DELETE</a>
+                                </div>
+                            @endif
                         @endif
                     </div>
                     <div class="row">
@@ -48,7 +50,7 @@
                     <h2><span class="comment-count">{{ count($review->comments) }}</span>COMMENTS</h2>
                     <div class="comments-container">
                         @foreach($review->comments as $comment)
-                        <div class="row comment-row">
+                        <div class="row comment-row" id="{{ $comment->id }}">
                             <div class="col-md-12">
                                 <div class="media">
                                     <div class="media-left media-top">
@@ -69,10 +71,12 @@
                                                 <small class="txt-space2">
                                                     {{ $comment->created_at->diffForHumans()}}
                                                 </small>
-                                            @if (Auth::user()->name == $comment->user->name)
-                                                <input type="button" value="DELETE" name="reviewCommentDel" id="reviewCommentDel" data-id="{{ $comment->id }}" class="btn btn-default-inv">
-                                                <input type="hidden" value="{{ csrf_token() }}" name="reviewToken" id="reviewToken">
-                                            @endif
+                                                @if (Auth::user())
+                                                    @if (Auth::user()->id == $comment->user->id)
+                                                        <input type="button" value="DELETE" name="reviewCommentDel" id="reviewCommentDel" data-id="{{ $comment->id }}" class="btn btn-default-inv pull-right">
+                                                        <input type="hidden" value="{{ csrf_token() }}" name="reviewToken" id="reviewToken">
+                                                    @endif
+                                                @endif
                                             </p>
                                         </div>
                                     </div>
